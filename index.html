@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SuperOps Interactive Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #FF3B9A;
+      --pink-dark: #CC2078;
+      --pink-glow: rgba(255,59,154,0.18);
+      --pink-border: rgba(255,59,154,0.3);
+      --pink-light: rgba(255,59,154,0.08);
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1A1A1A;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #FFFFFF;
+      --text-muted: #888888;
+      --text-dim: #444444;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      height: 58px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--pink);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 14px var(--pink-glow);
+    }
+
+    .nav-logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border2);
+    }
+
+    .nav-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 11px;
+      border-radius: 20px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid var(--pink-border);
+      letter-spacing: 0.2px;
+    }
+
+    .nav-spacer { flex: 1; }
+
+    .nav-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .nav-hint-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pink);
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--pink-glow); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 4px transparent; }
+    }
+
+    /* ── Layout ── */
+    .main {
+      display: flex;
+      height: calc(100vh - 58px);
+    }
+
+    /* ── Video ── */
+    .video-side {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      min-width: 0;
+    }
+
+    .video-header {
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .video-header-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--pink-light);
+      border: 1px solid var(--pink-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .video-header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .video-header-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .video-wrap {
+      flex: 1;
+      position: relative;
+      background: #000;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-footer {
+      padding: 11px 22px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .video-footer-tip {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .tip-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid var(--pink-border);
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Chat ── */
+    .chat-side {
+      width: 430px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+
+    .chat-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: var(--pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 16px var(--pink-glow);
+    }
+
+    .chat-header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .chat-header-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .online-badge {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #4ADE80;
+      font-weight: 500;
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .online-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #4ADE80;
+      animation: pulse 2s infinite;
+    }
+
+    /* Suggested chips */
+    .chat-prompts {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .prompts-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 1px;
+    }
+
+    .prompt-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 13px;
+      border-radius: 9px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      text-align: left;
+      width: 100%;
+    }
+
+    .prompt-chip:hover {
+      border-color: var(--pink-border);
+      background: var(--pink-light);
+    }
+
+    .prompt-chip:hover .chip-arrow { color: var(--pink); }
+
+    .chip-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--pink-light);
+      border: 1px solid var(--pink-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chip-text {
+      font-size: 12px;
+      color: #AAAAAA;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .chip-arrow {
+      font-size: 14px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+
+    .chip-copied {
+      font-size: 11px;
+      color: var(--pink);
+      flex-shrink: 0;
+    }
+
+    /* Bot iframe */
+    .chat-bot-wrap {
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+
+    .chat-bot-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      html, body { overflow: auto; }
+      .main { flex-direction: column; height: auto; }
+      .chat-side { width: 100%; height: 580px; }
+      .video-wrap { height: 300px; }
+      .video-side { height: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-logo" href="https://superops.com" target="_blank">
+      <div class="nav-logo-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">SuperOps</span>
+    </a>
+    <div class="nav-divider"></div>
+    <span class="nav-pill">Interactive Demo</span>
+    <div class="nav-spacer"></div>
+    <div class="nav-hint">
+      <div class="nav-hint-dot"></div>
+      Pause the video anytime and ask the assistant
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <!-- Video -->
+    <div class="video-side">
+      <div class="video-header">
+        <div class="video-header-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF3B9A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div>
+          <div class="video-header-title">SuperOps Platform Walkthrough</div>
+          <div class="video-header-sub">PSA + RMM unified — see it in action</div>
+        </div>
+      </div>
+
+      <div class="video-wrap">
+        <iframe
+          src="https://superops.portal.trainn.co/share/BVUhLjcsuTN8I5hpA1F0Nw/embed?autoplay=false"
+          allowfullscreen
+          allow="autoplay; fullscreen">
+        </iframe>
+      </div>
+
+      <div class="video-footer">
+        <div class="video-footer-tip">
+          <span class="tip-badge">TIP</span>
+          Pause the video at any moment and use the assistant on the right to ask follow-up questions
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-side">
+      <div class="chat-header">
+        <div class="chat-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path d="M9.9 19.2L4 13.3l1.4-1.4 4.5 4.5L19.6 6l1.4 1.4z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="chat-header-title">SuperOps Assistant</div>
+          <div class="chat-header-sub">Ask anything about the platform</div>
+        </div>
+        <div class="online-badge">
+          <div class="online-dot"></div>
+          Online
+        </div>
+      </div>
+
+      <div class="chat-prompts">
+        <div class="prompts-label">Suggested questions</div>
+        <button class="prompt-chip" onclick="copyPrompt(this, 'How does patch management work in SuperOps?')">
+          <div class="chip-icon">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF3B9A" stroke-width="2.5"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+          </div>
+          <span class="chip-text">How does patch management work in SuperOps?</span>
+          <span class="chip-arrow">›</span>
+        </button>
+        <button class="prompt-chip" onclick="copyPrompt(this, 'How do I set up automated ticketing?')">
+          <div class="chip-icon">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF3B9A" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"></path></svg>
+          </div>
+          <span class="chip-text">How do I set up automated ticketing?</span>
+          <span class="chip-arrow">›</span>
+        </button>
+        <button class="prompt-chip" onclick="copyPrompt(this, 'What integrations does SuperOps support?')">
+          <div class="chip-icon">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF3B9A" stroke-width="2.5"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          </div>
+          <span class="chip-text">What integrations does SuperOps support?</span>
+          <span class="chip-arrow">›</span>
+        </button>
+      </div>
+
+      <div class="chat-bot-wrap">
+        <iframe
+          src="https://interfaces.zapier.com/embed/chatbot/cmneruzm8001jk4phx2n9tudc"
+          allow="clipboard-write *">
+        </iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    try {
+      !function(){var t=window;if("function"!=typeof t.Trainn){var e=document,n=function(){n.c(arguments)};n.q=[],n.c=function(t){n.q.push(t)},t.Trainn=n;var a=function(){var t=e.createElement("script");t.type="text/javascript",t.async=!0,t.src="https://js.trainn.co/v2/index.js";var n=e.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};"complete"===document.readyState?a():t.attachEvent?t.attachEvent("onload",a):t.addEventListener("load",a,!1)}}();
+      Trainn("init", { workspace: "superops" });
+    } catch(e) {}
+
+    function copyPrompt(btn, text) {
+      navigator.clipboard.writeText(text).catch(() => {});
+      const arrow = btn.querySelector('.chip-arrow');
+      const orig = arrow.textContent;
+      arrow.textContent = '✓';
+      arrow.style.color = '#FF3B9A';
+      setTimeout(() => { arrow.textContent = orig; arrow.style.color = ''; }, 1800);
+    }
+  </script>
+</body>
+</html>
